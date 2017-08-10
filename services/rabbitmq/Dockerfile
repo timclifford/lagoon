@@ -1,9 +1,12 @@
 FROM rabbitmq:3-management
 
 COPY services/rabbitmq/rabbitmq_delayed_message_exchange-0.0.1.ez /plugins
+COPY services/rabbitmq/autocluster-0.6.1.ez /plugins
 
 RUN rabbitmq-plugins enable --offline rabbitmq_delayed_message_exchange
+RUN rabbitmq-plugins enable --offline autocluster
 
 ENV RABBITMQ_DEFAULT_USER=guest \
     RABBITMQ_DEFAULT_PASS="guest" \
+    RABBITMQ_ERLANG_COOKIE=cookie \
     NODENAME="rabbitmq@localhost"
