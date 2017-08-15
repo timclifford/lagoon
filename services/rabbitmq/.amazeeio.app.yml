@@ -45,7 +45,7 @@ objects:
       sitegroup: ${SAFE_SITEGROUP}
     name: ${SERVICE_NAME}
   spec:
-    replicas: 1
+    replicas: 3
     selector:
       service: ${SERVICE_NAME}
     strategy:
@@ -64,7 +64,6 @@ objects:
           ports:
           - containerPort: 3000
             protocol: TCP
-          ports:
           - containerPort: 15672
             protocol: TCP
           - containerPort: 5672
