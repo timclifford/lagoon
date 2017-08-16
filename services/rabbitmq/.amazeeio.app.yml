@@ -78,9 +78,9 @@ objects:
           - containerPort: 5672
             protocol: TCP
             name: main
-            volumeMounts:
-              - name: ${SERVICE_NAME}-volume
-                mountPath: /var/lib/rabbitmq
+          volumeMounts:
+            - name: ${SERVICE_NAME}-volume
+              mountPath: /var/lib/rabbitmq
           # readinessProbe:
           #   exec:
           #     command:
