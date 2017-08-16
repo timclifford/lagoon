@@ -28,7 +28,7 @@ RUN \
 # RUN adduser -s /bin/bash -D -h /var/lib/rabbitmq rabbitmq
 
 RUN echo erlang-cookie > /var/lib/rabbitmq/.erlang.cookie
-ADD services/rabbitmq/rabbitmq.config /usr/lib/rabbitmq/etc/rabbitmq/rabbitmq.config
+ADD ./services/rabbitmq/rabbitmq.config /usr/lib/rabbitmq/etc/rabbitmq/rabbitmq.config
 
 # Environment variables required to run
 ENV ERL_EPMD_PORT=4369
