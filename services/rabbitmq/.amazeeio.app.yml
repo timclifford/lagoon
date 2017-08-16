@@ -50,7 +50,6 @@ objects:
       name: management
     - port: 5672
       name: main
-    clusterIP: None
     selector:
       app: rabbitmq
 
