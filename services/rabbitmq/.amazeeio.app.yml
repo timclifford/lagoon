@@ -49,7 +49,7 @@ objects:
     name: rabbitmq
   volumeClaimTemplates:
   - metadata:
-      name: ${SERVICE_NAME}
+      name: datadir
     spec:
       accessModes: [ "ReadWriteOnce" ]
       # storageClassName: my-storage-class
@@ -78,7 +78,7 @@ objects:
             protocol: TCP
             name: main
           volumeMounts:
-            - name: ${SERVICE_NAME}
+            - name: datadir
               mountPath: /var/lib/rabbitmq
           # readinessProbe:
           #   exec:
