@@ -27,16 +27,6 @@ parameters:
     required: true
 objects:
 - apiVersion: v1
-  kind: PersistentVolumeClaim
-  metadata:
-    name: ${SERVICE_NAME}-volume
-  spec:
-    accessModes:
-      - ReadWriteOnce
-    resources:
-      requests:
-        storage: 1Gi
-- apiVersion: v1
   kind: Service
   metadata:
     annotations:
@@ -57,6 +47,15 @@ objects:
   kind: StatefulSet
   metadata:
     name: rabbitmq
+  volumeClaimTemplates:
+  - metadata:
+      name: ${SERVICE_NAME}
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      # storageClassName: my-storage-class
+      resources:
+        requests:
+          storage: 1Gi
   spec:
     serviceName: "rabbitmq"
     replicas: 3
@@ -79,7 +78,7 @@ objects:
             protocol: TCP
             name: main
           volumeMounts:
-            - name: ${SERVICE_NAME}-volume
+            - name: ${SERVICE_NAME}
               mountPath: /var/lib/rabbitmq
           # readinessProbe:
           #   exec:
