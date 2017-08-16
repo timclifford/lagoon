@@ -69,7 +69,7 @@ objects:
       spec:
         containers:
         - name: ${SERVICE_NAME}
-          image: ' '
+          image: ${SERVICE_NAME}
           imagePullPolicy: Always
           ports:
           - containerPort: 15672
