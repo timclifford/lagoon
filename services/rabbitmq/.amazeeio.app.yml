@@ -58,7 +58,7 @@ objects:
       spec:
         containers:
         - name: ${SERVICE_NAME}
-          image: jenkins-lagoon-deploy-cluster-832-30-rabbitmq
+          image: ${SAFE_SITEGROUP}/${SERVICE_NAME}
           imagePullPolicy: Always
           ports:
           - containerPort: 15672
