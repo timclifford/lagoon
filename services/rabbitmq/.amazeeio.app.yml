@@ -58,7 +58,7 @@ objects:
       spec:
         containers:
         - name: ${SERVICE_NAME}
-          image: ' '
+          image: ${SERVICE_NAME}
           imagePullPolicy: Always
           ports:
           - containerPort: 15672
@@ -86,17 +86,6 @@ objects:
                 fieldRef:
                   apiVersion: v1
                   fieldPath: metadata.namespace
-    triggers:
-    - type: ConfigChange
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - ${SERVICE_NAME}
-        from:
-          kind: ImageStreamTag
-          name: ${SERVICE_NAME}:latest
-      type: ImageChange
-
     volumeClaimTemplates:
     - metadata:
         name: datadir
