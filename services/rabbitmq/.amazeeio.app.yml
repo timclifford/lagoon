@@ -60,7 +60,6 @@ objects:
         - name: ${SERVICE_NAME}
           image: ${SERVICE_NAME}
           imagePullPolicy: Always
-          command: "echo it works"
           ports:
           - containerPort: 15672
             protocol: TCP
