@@ -58,8 +58,9 @@ objects:
       spec:
         containers:
         - name: ${SERVICE_NAME}
-          image: ${SAFE_BRANCH}/${SERVICE_NAME}
+          image: ${SERVICE_NAME}
           imagePullPolicy: Always
+          command: "echo it works"
           ports:
           - containerPort: 15672
             protocol: TCP
