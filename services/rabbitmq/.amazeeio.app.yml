@@ -76,7 +76,7 @@ objects:
             name: main
           volumeMounts:
             - name: datadir
-              mountPath: /var/lib/rabbitmq
+              mountPath: /data
           # readinessProbe:
           #   exec:
           #     command:
