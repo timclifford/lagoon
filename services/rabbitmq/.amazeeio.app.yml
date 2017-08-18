@@ -58,7 +58,14 @@ objects:
       spec:
         containers:
         - name: ${SERVICE_NAME}
-          image: 172.30.1.1:5000/amze-lagoon-cluster-832/rabbitmq:latest
+          image: rtprio/rmq-cluster
+          env:
+            - name: CLUSTERED
+              value: "true"
+            - name: CLUSTER_WITH
+              value: "rabbitmq-0"
+            - name: RABBITMQ_SERVICE_DOMAIN
+              value: "svc.cluster.local"
           imagePullPolicy: Always
           ports:
           - containerPort: 15672
