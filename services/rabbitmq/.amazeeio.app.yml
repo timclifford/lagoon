@@ -59,13 +59,6 @@ objects:
         containers:
         - name: ${SERVICE_NAME}
           image: rtprio/rmq-cluster
-          env:
-            - name: CLUSTERED
-              value: "true"
-            - name: CLUSTER_WITH
-              value: "rabbitmq-0"
-            - name: RABBITMQ_SERVICE_DOMAIN
-              value: "svc.cluster.local"
           imagePullPolicy: Always
           ports:
           - containerPort: 15672
@@ -84,6 +77,12 @@ objects:
           #   initialDelaySeconds: 15
           #   timeoutSeconds: 5
           env:
+            - name: CLUSTERED
+              value: "true"
+            - name: CLUSTER_WITH
+              value: "rabbitmq-0"
+            - name: RABBITMQ_SERVICE_DOMAIN
+              value: "svc.cluster.local"
             - name: RABBITMQ_NODENAME
               valueFrom:
                 fieldRef:
