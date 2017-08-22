@@ -4,10 +4,6 @@ set -e
 
 ulimit -n 1024
 
-if [ -n "$RABBITMQ_SERVICE_DOMAIN" ]; then
-    echo "search $RABBITMQ_SERVICE_DOMAIN" >> /etc/resolv.conf
-fi
-
 echo "clustered: $CLUSTERED"
 
 if [ -z "$CLUSTERED" ]; then
