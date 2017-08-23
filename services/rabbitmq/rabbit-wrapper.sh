@@ -34,6 +34,7 @@ else
 fi
 
 if [ -n "$RABBITMQ_USERNAME" -a -n "$RABBITMQ_PASSWORD" -a -n "$RABBITMQ_VHOST" ]; then
+    echo "create_vhost"
     create_vhost() {
         # Check that rabbitmq app is running before adding the vhost otherwise the container will crash
         if [[ `rabbitmqctl status` == *"rabbit,\"RabbitMQ\""* ]]; then
@@ -55,18 +56,4 @@ if [ -n "$RABBITMQ_USERNAME" -a -n "$RABBITMQ_PASSWORD" -a -n "$RABBITMQ_VHOST" 
     create_vhost
 fi
 
-# Tail to keep the a foreground process active..
-if [ "$1" = 'tail' ]; then
-    tail_log() {
-        if [[ `rabbitmqctl status` == *"rabbit,\"RabbitMQ\""* ]]; then
-            tail -f /data/log/rabbit\@$HOSTNAME.log
-        else
-            echo "Waiting for the rabbitmq app to start..."
-            sleep 1
-            tail_log
-        fi
-    }
-    tail_log
-else
-    exec "$@"
-fi
+rabbitmqctl wait /var/lib/rabbitmq/mnesia/rabbitmq@localhost.pid

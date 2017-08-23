@@ -69,13 +69,15 @@ objects:
             name: main
           volumeMounts:
             - name: datadir
-              mountPath: /data
-          # readinessProbe:
-          #   exec:
-          #     command:
-          #     - /usr/share/container-scripts/rabbitmq/readiness-probe.sh
-          #   initialDelaySeconds: 15
-          #   timeoutSeconds: 5
+              mountPath: /var/lib/rabbitmq
+            - name: logdir
+              mountPath: /var/log/rabbitmq
+          readinessProbe:
+            exec:
+              command:
+              - /usr/lib/rabbitmq/bin/rabbitmqctl
+            initialDelaySeconds: 5
+            timeoutSeconds: 5
           env:
             - name: CLUSTERED
               value: "true"
@@ -95,6 +97,14 @@ objects:
     volumeClaimTemplates:
     - metadata:
         name: datadir
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        # storageClassName: my-storage-class
+        resources:
+          requests:
+            storage: 1Gi
+    - metadata:
+        name: logdir
       spec:
         accessModes: [ "ReadWriteOnce" ]
         # storageClassName: my-storage-class
