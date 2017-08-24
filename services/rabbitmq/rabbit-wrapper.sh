@@ -28,9 +28,9 @@ else
             echo "not myself"
             rabbitmqctl stop_app
             if [ -z "$RAM_NODE" ]; then
-#                rabbitmqctl join_cluster rabbit@$CLUSTER_WITH
+               rabbitmqctl join_cluster $CLUSTER_WITH
             else
-#                rabbitmqctl join_cluster --ram rabbit@$CLUSTER_WITH
+               rabbitmqctl join_cluster --ram $CLUSTER_WITH
             fi
             rabbitmqctl start_app
         fi
