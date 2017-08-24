@@ -4,6 +4,8 @@ set -e
 
 ulimit -n 1024
 
+echo $COOKIE > /var/lib/rabbitmq/.erlang.cookie
+
 echo "clustered: $CLUSTERED"
 
 if [ -z "$CLUSTERED" ]; then

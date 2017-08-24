@@ -85,6 +85,8 @@ objects:
               value: "true"
             - name: CLUSTER_WITH
               value: "rabbitmq-0"
+            - name: ERLANG_COOKIE
+              value: "0d599f0ec05c3bda8c3b8a68c32a1b47"
             - name: RABBITMQ_SERVICE_DOMAIN
               value: "svc.cluster.local"
             - name: RABBITMQ_NODENAME
