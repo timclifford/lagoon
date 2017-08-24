@@ -49,7 +49,6 @@ objects:
     name: rabbitmq
   spec:
     serviceName: "rabbitmq"
-    subdomain: rmq
     replicas: 3
     template:
       metadata:
