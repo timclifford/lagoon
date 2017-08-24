@@ -84,7 +84,7 @@ objects:
             - name: CLUSTERED
               value: "true"
             - name: CLUSTER_WITH
-              value: "rabbitmq-0"
+              value: "rabbitmq-0@rabbitmq-0.${SAFE_SITEGROUP}.svc.cluster.local"
             - name: ERLANG_COOKIE
               value: "0d599f0ec05c3bda8c3b8a68c32a1b47"
             - name: RABBITMQ_NODENAME
