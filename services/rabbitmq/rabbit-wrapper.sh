@@ -4,8 +4,8 @@ set -e
 
 ulimit -n 1024
 
+rm -f /var/lib/rabbitmq/.erlang.cookie
 echo $ERLANG_COOKIE > /var/lib/rabbitmq/.erlang.cookie
-
 chmod 600 /var/lib/rabbitmq/.erlang.cookie
 
 echo "clustered: $CLUSTERED"
