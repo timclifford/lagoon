@@ -59,7 +59,7 @@ objects:
       spec:
         containers:
         - name: ${SERVICE_NAME}
-          image: 172.30.1.1:5000/amze-lagoon-cluster-832/rabbitmq@sha256:2d8c4e82023e4cbe76ebfc1695d849854678fbe8faa8d7f22c0bc49efce4bfdd
+          image: 172.30.1.1:5000/amze-lagoon-cluster-832/rabbitmq@sha256:6d65703ad9edcb22134af6d7e7af8a072ed4708511187d1fc2a61e65dd896802
           imagePullPolicy: Always
           ports:
           - containerPort: 15672
