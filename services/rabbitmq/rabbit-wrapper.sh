@@ -50,7 +50,7 @@ if [ -n "$RABBITMQ_USERNAME" -a -n "$RABBITMQ_PASSWORD" -a -n "$RABBITMQ_VHOST" 
             # create user only if it doesn't exist
             if [ ! -n "$USER_EXISTS" ]; then
                 rabbitmqctl add_user $RABBITMQ_USERNAME $RABBITMQ_PASSWORD
-                rabbitmqctl add_vhost $RABBITMQ_VHOST
+                rabbitmqctl add_vhost $RABBITMQ_VHOST || true
                 rabbitmqctl set_permissions -p $RABBITMQ_VHOST $RABBITMQ_USERNAME ".*" ".*" ".*"
                 rabbitmqctl set_policy -p $RABBITMQ_VHOST ha-all "" '{"ha-mode":"all","ha-sync-mode":"automatic"}'
             fi
