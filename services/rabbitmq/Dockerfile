@@ -11,6 +11,7 @@ ENV RABBITMQ_DEFAULT_USER=guest \
 COPY services/rabbitmq/rabbit-wrapper.sh /
 RUN chmod 755 /rabbit-wrapper.sh
 
+RUN apt-get update && apt-get install -y net-tools iputils-ping dnsutils
 
 EXPOSE 4369 5671 5672 25672
 CMD ["/rabbit-wrapper.sh"]
