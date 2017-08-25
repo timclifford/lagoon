@@ -24,13 +24,16 @@ else
 
         host=`hostname`
         # Don't cluster with self
+        echo "sleeping 10 before joining cluster."
+        sleep 10
+
         if ! [[ $CLUSTER_WITH =~ $host ]]; then
             echo "not myself"
             rabbitmqctl stop_app
             if [ -z "$RAM_NODE" ]; then
-               rabbitmqctl join_cluster $CLUSTER_WITH
+               rabbitmqctl join_cluster ${CLUSTER_WITH}.${POD_NAMESPACE}.svc.cluster.local
             else
-               rabbitmqctl join_cluster --ram $CLUSTER_WITH
+               rabbitmqctl join_cluster --ram ${CLUSTER_WITH}.${POD_NAMESPACE}.svc.cluster.local
             fi
             rabbitmqctl start_app
         fi
