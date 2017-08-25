@@ -59,7 +59,7 @@ objects:
       spec:
         containers:
         - name: ${SERVICE_NAME}
-          image: rtprio/rmq-cluster
+          image: docker-registry.default.svc.cluster.local/amze-lagoon-cluster-832/rabbitmq
           imagePullPolicy: Always
           ports:
           - containerPort: 15672
