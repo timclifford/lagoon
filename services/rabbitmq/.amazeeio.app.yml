@@ -96,6 +96,18 @@ objects:
                 fieldRef:
                   apiVersion: v1
                   fieldPath: metadata.namespace
+            - name: RABBITMQ_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: secret-environment
+                  key: RABBITMQ_USERNAME
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secret-environment
+                  key: RABBITMQ_PASSWORD
+            - name: RABBITMQ_VHOST
+              value: "/"
     volumeClaimTemplates:
     - metadata:
         name: datadir
