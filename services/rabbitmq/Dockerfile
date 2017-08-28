@@ -7,7 +7,8 @@ RUN rabbitmq-plugins enable --offline rabbitmq_delayed_message_exchange
 ENV RABBITMQ_DEFAULT_USER=guest \
     RABBITMQ_DEFAULT_PASS="guest" \
     RABBITMQ_USE_LONGNAME=true \
-    RABBITMQ_LOG_BASE=/var/log/rabbitmq
+    RABBITMQ_LOG_BASE=/var/log/rabbitmq \
+    RABBITMQ_LOGS=/var/log/rabbitmq 
 
 COPY services/rabbitmq/rabbit-wrapper.sh /
 RUN chmod 755 /rabbit-wrapper.sh
