@@ -63,4 +63,4 @@ if [ -n "$RABBITMQ_USERNAME" -a -n "$RABBITMQ_PASSWORD" -a -n "$RABBITMQ_VHOST" 
     create_vhost
 fi
 
-rabbitmqctl wait /var/lib/rabbitmq/mnesia/rabbitmq@localhost.pid
+rabbitmqctl wait /var/lib/rabbitmq/mnesia/rabbitmq@${host}.pid

@@ -17,6 +17,13 @@ services:
     ports:
       - "15672:15672"
       - "5672:5672"
+    environment:
+      - ERLANG_COOKIE="f7fefff583e58274791e766d46ba1b1359c6366c"
+      - RABBITMQ_NODENAME=localhost
+      - RABBITMQ_USERNAME=guest
+      - RABBITMQ_PASSWORD=guest
+      - RABBITMQ_VHOST="/"
+      - RABBITMQ_USE_LONGNAME=false
   openshiftremove:
     build:
       context: .
