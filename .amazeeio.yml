@@ -51,6 +51,7 @@ services:
     amazeeio:
       type: custom
       template: services/rabbitmq/.amazeeio.app.yml
+      persistant: true
     build:
       dockerfile: services/rabbitmq/Dockerfile
   rest2tasks:
