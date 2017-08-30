@@ -24,6 +24,7 @@ COPY services/rest2tasks /app/services/rest2tasks
 WORKDIR /app/services/rest2tasks/
 
 RUN yum install -y iputils net-tools bind-utils telnet nmap nmap-ncat
+COPY .env.defaults .
 
 # building our service
 RUN yarn run build

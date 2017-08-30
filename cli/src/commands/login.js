@@ -15,7 +15,7 @@ import { fileExists, readFile, writeFile } from '../util/fs';
 import { printErrors } from '../printErrors';
 
 import typeof Yargs from 'yargs';
-import type { BaseArgs } from './index';
+import type { BaseArgs } from '.';
 
 const name = 'login';
 const description = 'Authenticate with amazee.io via an SSH key';
@@ -38,7 +38,7 @@ export async function run({
   clog,
   cerr,
   identity: identityOption,
-  }: Args): Promise<number> {
+}: Args): Promise<number> {
   if (identityOption != null && !await fileExists(identityOption)) {
     return printErrors(cerr, 'File does not exist at identity option path!');
   }
@@ -59,16 +59,21 @@ export async function run({
     utils.parseKey(privateKey).encryption,
   );
 
-  const connection = await sshConnect({
-    host: process.env.SSH_AUTH_HOST || 'auth.amazee.io',
-    port: Number(process.env.SSH_AUTH_PORT) || 2020,
-    username: process.env.SSH_AUTH_USER || 'api',
-    privateKey,
-    passphrase,
-  });
+  let connection;
+  try {
+    connection = await sshConnect({
+      host: process.env.SSH_AUTH_HOST || 'auth.amazee.io',
+      port: Number(process.env.SSH_AUTH_PORT) || 2020,
+      username: process.env.SSH_AUTH_USER || 'api',
+      privateKey,
+      passphrase,
+    });
+  } catch (err) {
+    return printErrors(cerr, err);
+  }
 
   const output = await sshExec(connection, 'login');
-  const token = output.toString();
+  const token = output.toString().replace(/(\r\n|\n|\r)/gm, '');
   const tokenFilePath = path.join(homeDir, '.ioauth');
   await writeFile(tokenFilePath, token);
 
