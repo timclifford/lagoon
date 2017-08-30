@@ -9,6 +9,11 @@ services:
     build:
       context: .
       dockerfile: services/rabbitmq/Dockerfile
+    environment:
+      - ERLANG_COOKIE="bf57f7a6e8162ca863f3a45e812d98e443e371f3"
+      - RABBITMQ_NODENAME=localhost
+      - RABBITMQ_VHOST="/"
+      - RABBITMQ_USE_LONGNAME=false
   openshiftremove:
     build:
       context: .
