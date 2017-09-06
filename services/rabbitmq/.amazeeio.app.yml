@@ -27,143 +27,101 @@ parameters:
     required: true
 objects:
 - apiVersion: v1
-  kind: PersistentVolumeClaim
+  kind: Service
   metadata:
-    name: ${SERVICE_NAME}-volume
-  spec:
-    accessModes:
-      - ReadWriteOnce
-    resources:
-      requests:
-        storage: 1Gi
-- apiVersion: v1
-  kind: DeploymentConfig
-  metadata:
-    creationTimestamp: null
+    annotations:
+      service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+    name: rabbitmq
     labels:
-      branch: ${SAFE_BRANCH}
-      sitegroup: ${SAFE_SITEGROUP}
-    name: ${SERVICE_NAME}
+      app: rabbitmq
   spec:
-    replicas: 1
+    clusterIP: None
+    ports:
+    - port: 15672
+      name: management
+    - port: 5672
+      name: main
     selector:
-      service: ${SERVICE_NAME}
-    strategy:
-      resources: {}
+      app: rabbitmq
+- apiVersion: apps/v1beta1
+  kind: StatefulSet
+  metadata:
+    name: rabbitmq
+  spec:
+    serviceName: "rabbitmq"
+    replicas: 3
     template:
       metadata:
-        creationTimestamp: null
         labels:
-          service: ${SERVICE_NAME}
-          branch: ${SAFE_BRANCH}
-          sitegroup: ${SAFE_SITEGROUP}
+          app: rabbitmq
+        #annotations:
+        #  pod.alpha.kubernetes.io/initialized: "true"
       spec:
         containers:
-        - image: ' '
-          name: ${SERVICE_NAME}
-          ports:
-          - containerPort: 3000
-            protocol: TCP
+        - name: ${SERVICE_NAME}
+          image: 172.30.1.1:5000/amze-lagoon-cluster-832/rabbitmq@sha256:6d65703ad9edcb22134af6d7e7af8a072ed4708511187d1fc2a61e65dd896802
+          imagePullPolicy: Always
           ports:
           - containerPort: 15672
             protocol: TCP
+            name: management
           - containerPort: 5672
             protocol: TCP
+            name: main
+          volumeMounts:
+            - name: datadir
+              mountPath: /var/lib/rabbitmq
+            - name: logdir
+              mountPath: /var/log/rabbitmq
           readinessProbe:
-            tcpSocket:
-              port: 5672
-            initialDelaySeconds: 15
-            timeoutSeconds: 1
+            exec:
+              command:
+              - /usr/lib/rabbitmq/bin/rabbitmqctl
+              - node_health_check
+            initialDelaySeconds: 5
+            timeoutSeconds: 5
           env:
-            - name: AMAZEEIO_GIT_BRANCH
+            - name: CLUSTERED
+              value: "true"
+            - name: CLUSTER_WITH
+              value: "rabbitmq-0@rabbitmq-0.rabbitmq"
+            - name: ERLANG_COOKIE
+              value: "0d599f0ec05c3bda8c3b8a68c32a1b47"
+            - name: RABBITMQ_NODENAME
               valueFrom:
-                configMapKeyRef:
-                  name: amazeeio-env
-                  key: AMAZEEIO_GIT_BRANCH
-            - name: AMAZEEIO_GIT_SAFE_BRANCH
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_NAMESPACE
               valueFrom:
-                configMapKeyRef:
-                  name: amazeeio-env
-                  key: AMAZEEIO_GIT_SAFE_BRANCH
-            - name: AMAZEEIO_GIT_SHA
-              valueFrom:
-                configMapKeyRef:
-                  name: amazeeio-env
-                  key: AMAZEEIO_GIT_SHA
-            - name: AMAZEEIO_SITEGROUP
-              valueFrom:
-                configMapKeyRef:
-                  name: amazeeio-env
-                  key: AMAZEEIO_SITEGROUP
-            - name: RABBITMQ_DEFAULT_USER
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.namespace
+            - name: RABBITMQ_USERNAME
               valueFrom:
                 secretKeyRef:
                   name: secret-environment
                   key: RABBITMQ_USERNAME
-            - name: RABBITMQ_DEFAULT_PASS
+            - name: RABBITMQ_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: secret-environment
                   key: RABBITMQ_PASSWORD
-          resources:
-            requests:
-              cpu: 100m
-              memory: 100Mi
-          volumeMounts:
-          - mountPath: /var/lib/rabbitmq
-            name: ${SERVICE_NAME}-volume
-        volumes:
-        - name: ${SERVICE_NAME}-volume
-          persistentVolumeClaim:
-            claimName: ${SERVICE_NAME}-volume
-    test: false
-    triggers:
-    - type: ConfigChange
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - ${SERVICE_NAME}
-        from:
-          kind: ImageStreamTag
-          name: ${SERVICE_NAME}:latest
-      type: ImageChange
-  status: {}
-- apiVersion: v1
-  kind: Service
-  metadata:
-    creationTimestamp: null
-    labels:
-      service: ${SERVICE_NAME}
-      branch: ${SAFE_BRANCH}
-      sitegroup: ${SAFE_SITEGROUP}
-    name: ${SERVICE_NAME}
-  spec:
-    ports:
-    - name: 15672-tcp
-      port: 15672
-      protocol: TCP
-      targetPort: 15672
-    - name: 5672-tcp
-      port: 5672
-      protocol: TCP
-      targetPort: 5672
-    selector:
-      service: ${SERVICE_NAME}
-  status:
-    loadBalancer: {}
-- apiVersion: v1
-  kind: Route
-  metadata:
-    creationTimestamp: null
-    labels:
-      service: ${SERVICE_NAME}
-      branch: ${SAFE_BRANCH}
-      sitegroup: ${SAFE_SITEGROUP}
-    name: ${SERVICE_NAME}
-  spec:
-    host: ${SERVICE_NAME}.${ROUTER_URL}
-    port:
-      targetPort: 15672-tcp
-    to:
-      kind: Service
-      name: ${SERVICE_NAME}
+            - name: RABBITMQ_VHOST
+              value: "/"
+    volumeClaimTemplates:
+    - metadata:
+        name: datadir
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        # storageClassName: my-storage-class
+        resources:
+          requests:
+            storage: 1Gi
+    - metadata:
+        name: logdir
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        # storageClassName: my-storage-class
+        resources:
+          requests:
+            storage: 1Gi

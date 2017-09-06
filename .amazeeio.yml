@@ -59,6 +59,7 @@ services:
     amazeeio:
       type: custom
       template: services/rabbitmq/.amazeeio.app.yml
+      persistant: true
     build:
       dockerfile: Dockerfile
       context: services/rabbitmq

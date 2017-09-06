@@ -6,4 +6,14 @@ RUN rabbitmq-plugins enable --offline rabbitmq_delayed_message_exchange
 
 ENV RABBITMQ_DEFAULT_USER=guest \
     RABBITMQ_DEFAULT_PASS="guest" \
-    NODENAME="rabbitmq@localhost"
+    RABBITMQ_USE_LONGNAME=true \
+    RABBITMQ_LOG_BASE=/var/log/rabbitmq \
+    RABBITMQ_LOGS=/var/log/rabbitmq 
+
+COPY services/rabbitmq/rabbit-wrapper.sh /
+RUN chmod 755 /rabbit-wrapper.sh
+
+RUN apt-get update && apt-get install -y net-tools iputils-ping dnsutils nmap netcat
+
+EXPOSE 4369 5671 5672 25672
+CMD ["/rabbit-wrapper.sh"]
