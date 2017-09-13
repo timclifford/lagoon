@@ -8,7 +8,7 @@ ENV RABBITMQ_DEFAULT_USER=guest \
     RABBITMQ_DEFAULT_PASS="guest" \
     RABBITMQ_USE_LONGNAME=true \
     RABBITMQ_LOG_BASE=/var/log/rabbitmq \
-    RABBITMQ_LOGS=/var/log/rabbitmq 
+    RABBITMQ_LOGS=/var/log/rabbitmq
 
 COPY rabbit-wrapper.sh /
 RUN chmod 755 /rabbit-wrapper.sh
