@@ -10,7 +10,7 @@ ENV RABBITMQ_DEFAULT_USER=guest \
     RABBITMQ_LOG_BASE=/var/log/rabbitmq \
     RABBITMQ_LOGS=/var/log/rabbitmq 
 
-COPY services/rabbitmq/rabbit-wrapper.sh /
+COPY rabbit-wrapper.sh /
 RUN chmod 755 /rabbit-wrapper.sh
 
 RUN apt-get update && apt-get install -y net-tools iputils-ping dnsutils nmap netcat
