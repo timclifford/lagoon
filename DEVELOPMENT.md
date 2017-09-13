@@ -8,13 +8,8 @@ Please check the [official Docs of Docker](https://docs.docker.com/engine/instal
 
 ## Start Services
 
-1. Add `172.30.0.0/16` to insecure registries in Docker (see [here](https://docs.docker.com/registry/insecure/) how to do that). Also make sure that you give your Docker Host minimum 4 CPUs and 6GB Ram. Also check that nothing is running on localhost:80 and localhost:443, as OpenShift will use these ports to run.
+1. Add `192.168.99.0/24 to insecure registries in Docker (see [here](https://docs.docker.com/registry/insecure/) how to do that). Also make sure that you give your Docker Host minimum 4 CPUs and 4GB Ram.
 
-2. Pull existing images for faster building as we use Docker Layer Caching
-
-```sh
-make pull
-```
 
 Important: Lagoon consists of a lot of Services and Docker Images, building and running them locally might not even be necessary.
 We're using make (see the [Makefile](./Makefile)) in order to only build the needed Docker Images specifically for a part of Lagoon.
@@ -46,11 +41,11 @@ make logs
 make tests
 ```
 
-6. Look what happens in OpenShift: https://172.16.123.1:8443/console (developer/developer)
+6. Look what happens in OpenShift: https://192.168.99.100:8443/console (developer/developer)
 
 ## Local Development
 
-Most services are written in Node.js. As many of these services share similar Node code and Node Packages, we're using a new feature of yarn, called `yarn workspaces`. Yarn Workspaces needs a package.json in the projects root directory that defines the workspaces plus an `.yarnrc` that enables workspace mode.
+Most services are written in Node.js. As many of these services share similar Node code and Node Packages, we're using a new feature of yarn, called `yarn workspaces`. Yarn Workspaces needs a package.json in the projects root directory that defines the workspaces.
 
 The development of the services can happen directly within Docker. Each container for each service is setup in a way that it's source code is mounted into the running container (see [docker-compose.yml](./docker-compose.yml). Node itself is watching the code via `nodemon` and restarts the node process automatically on a change.
 
