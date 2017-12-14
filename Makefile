@@ -148,9 +148,11 @@ build/redis: build/commons images/redis/Dockerfile
 phpimages := 	php__5.6-fpm \
 							php__7.0-fpm \
 							php__7.1-fpm  \
+							php__7.2-fpm \
 							php__5.6-cli \
 							php__7.0-cli \
-							php__7.1-cli
+							php__7.1-cli \
+							php__7.2-cli
 
 
 build-phpimages = $(foreach image,$(phpimages),build/$(image))
@@ -170,10 +172,11 @@ $(build-phpimages): build/commons
 
 base-images += $(phpimages)
 
-build/php__5.6-fpm build/php__7.0-fpm build/php__7.1-fpm: images/commons
+build/php__5.6-fpm build/php__7.0-fpm build/php__7.1-fpm build/php__7.2-fpm: images/commons
 build/php__5.6-cli: build/php__5.6-fpm
 build/php__7.0-cli: build/php__7.0-fpm
 build/php__7.1-cli: build/php__7.1-fpm
+build/php__7.2-cli: build/php__7.2-fpm
 
 
 #######

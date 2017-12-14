@@ -15,3 +15,11 @@
     git_repo_name: drupal.git
     project: ci-drupal
     branch: drupal8-composer-alpine-71
+- include: drupal/drupal.yaml
+  vars:
+    testname: "Drupal 8 composer PHP 7.2"
+    drupal_version: 8
+    php_version: 7.2
+    git_repo_name: drupal.git
+    project: ci-drupal
+    branch: drupal8-composer-alpine-72
