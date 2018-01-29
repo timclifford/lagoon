@@ -80,27 +80,10 @@ objects:
               port: 5672
             initialDelaySeconds: 15
             timeoutSeconds: 1
+          envFrom:
+          - configMapRef:
+              name: lagoon-env
           env:
-            - name: LAGOON_GIT_BRANCH
-              valueFrom:
-                configMapKeyRef:
-                  name: lagoon-env
-                  key: LAGOON_GIT_BRANCH
-            - name: LAGOON_GIT_SAFE_BRANCH
-              valueFrom:
-                configMapKeyRef:
-                  name: lagoon-env
-                  key: LAGOON_GIT_SAFE_BRANCH
-            - name: LAGOON_GIT_SHA
-              valueFrom:
-                configMapKeyRef:
-                  name: lagoon-env
-                  key: LAGOON_GIT_SHA
-            - name: LAGOON_PROJECT
-              valueFrom:
-                configMapKeyRef:
-                  name: lagoon-env
-                  key: LAGOON_PROJECT
             - name: RABBITMQ_DEFAULT_USER
               valueFrom:
                 secretKeyRef:
@@ -113,8 +96,8 @@ objects:
                   key: RABBITMQ_PASSWORD
           resources:
             requests:
-              cpu: 100m
-              memory: 100Mi
+              cpu: 10m
+              memory: 10Mi
           volumeMounts:
           - mountPath: /var/lib/rabbitmq
             name: ${SERVICE_NAME}-volume

@@ -1,5 +1,8 @@
 docker-compose-yaml: docker-compose.yml
 
+endpoint: 192.168.99.1:2020
+api: 192.168.99.1:3000
+
 tasks:
   post-rollout:
     - run:
@@ -22,3 +25,18 @@ tasks:
         name: drush cr
         command: cd web && drush -y cr
         service: cli
+
+environments:
+  master:
+    routes:
+        - nginx:
+            - "domain.com":
+                tls-acme: 'true'
+                insecure: Allow
+            - www.domain.com
+
+cronjobs:
+  - name: drush cron
+    schedule: "1 * * * *"
+    command: drush cron
+    service: cli

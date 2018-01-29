@@ -27,13 +27,14 @@ node {
                   sh "make build"
                 }
                 stage ('start services') {
-                  sh "make up-no-ports"
+                  sh "make kill"
+                  sh "make up"
                   sh "sleep 60"
                 }
               },
-              'start openshift': {
-                stage ('start openshift') {
-                  sh 'make openshift'
+              'start minishift': {
+                stage ('start minishift') {
+                  sh 'make minishift'
                 }
               }
             )
@@ -47,7 +48,7 @@ node {
             '_tests': {
                 stage ('run tests') {
                   try {
-                    sh "make push-openshift"
+                    sh "make push-minishift"
                     sh "make tests -j4"
                   } catch (e) {
                     echo "Something went wrong, trying to cleanup"
@@ -100,7 +101,7 @@ node {
 def cleanup() {
   try {
     sh "make down"
-    sh "make openshift/clean"
+    sh "make minishift/clean"
     sh "make clean"
   } catch (error) {
     echo "cleanup failed, ignoring this."

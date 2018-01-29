@@ -57,27 +57,10 @@ objects:
         containers:
         - image: ${REGISTRY}/${OPENSHIFT_PROJECT}/${SERVICE_NAME}:latest
           name: ${SERVICE_NAME}
+          envFrom:
+          - configMapRef:
+              name: lagoon-env
           env:
-            - name: LAGOON_GIT_BRANCH
-              valueFrom:
-                configMapKeyRef:
-                  name: lagoon-env
-                  key: LAGOON_GIT_BRANCH
-            - name: LAGOON_GIT_SAFE_BRANCH
-              valueFrom:
-                configMapKeyRef:
-                  name: lagoon-env
-                  key: LAGOON_GIT_SAFE_BRANCH
-            - name: LAGOON_GIT_SHA
-              valueFrom:
-                configMapKeyRef:
-                  name: lagoon-env
-                  key: LAGOON_GIT_SHA
-            - name: LAGOON_PROJECT
-              valueFrom:
-                configMapKeyRef:
-                  name: lagoon-env
-                  key: LAGOON_PROJECT
             - name: RABBITMQ_USERNAME
               valueFrom:
                 secretKeyRef:
@@ -95,8 +78,8 @@ objects:
                   key: JWTSECRET
           resources:
             requests:
-              cpu: 100m
-              memory: 100Mi
+              cpu: 10m
+              memory: 10Mi
     test: false
     triggers:
     - type: ConfigChange

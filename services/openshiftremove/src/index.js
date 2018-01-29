@@ -13,6 +13,13 @@ initSendToLagoonTasks();
 
 const ocsafety = string => string.toLocaleLowerCase().replace(/[^0-9a-z-]/g,'-')
 
+const pause = (duration) => new Promise(res => setTimeout(res, duration));
+
+const retry = (retries, fn, delay = 1000) =>
+  fn().catch(err => retries > 1
+    ? pause(delay).then(() => retry(retries - 1, fn, delay))
+    : Promise.reject(err));
+
 const messageConsumer = async function(msg) {
   const {
     projectName,
@@ -63,22 +70,78 @@ const messageConsumer = async function(msg) {
     },
   });
 
+  // Kubernetes API Object - needed as some API calls are done to the Kubernetes API part of OpenShift and
+  // the OpenShift API does not support them.
+  const kubernetes = new OpenShiftClient.Core({
+    url: openshiftConsole,
+    insecureSkipTlsVerify: true,
+    auth: {
+      bearer: openshiftToken
+    },
+  });
 
-  let projectStatus = {}
+  // Check if project exists
   try {
-    const projectsDelete = Promise.promisify(openshift.projects(openshiftProject).delete, { context: openshift.projects(openshiftProject) })
-    await projectsDelete()
-    sendToLagoonLogs('success', projectName, "", "task:remove-openshift:finished",  {},
-      `*[${projectName}]* remove \`${openshiftProject}\``
-    )
+    const projectsGet = Promise.promisify(openshift.projects(openshiftProject).get, { context: openshift.projects(openshiftProject) })
+    await projectsGet()
   } catch (err) {
+    // a non existing project also throws an error, we check if it's a 404, means it does not exist, and we assume it's already removed
     if (err.code == 404) {
       logger.info(`${openshiftProject} does not exist, assuming it was removed`);
       sendToLagoonLogs('success', projectName, "", "task:remove-openshift:finished",  {},
         `*[${projectName}]* remove \`${openshiftProject}\``
       )
       return
+    } else {
+      logger.error(err)
+      throw new Error
     }
+  }
+
+  // Project exists, let's remove it
+  try {
+    const deploymentconfigsGet = Promise.promisify(openshift.ns(openshiftProject).deploymentconfigs.get, { context: openshift.ns(openshiftProject).deploymentconfigs })
+    const deploymentconfigs = await deploymentconfigsGet()
+
+    for (let deploymentconfig of deploymentconfigs.items) {
+      const deploymentconfigsDelete = Promise.promisify(openshift.ns(openshiftProject).deploymentconfigs(deploymentconfig.metadata.name).delete, { context: openshift.ns(openshiftProject).deploymentconfigs(deploymentconfig.metadata.name) })
+      await deploymentconfigsDelete()
+      logger.info(`${openshiftProject}: Deleted DeploymentConfig ${deploymentconfig.metadata.name}`);
+    }
+
+    const podsGet = Promise.promisify(kubernetes.ns(openshiftProject).pods.get, { context: kubernetes.ns(openshiftProject).pods })
+    const pods = await podsGet()
+    for (let pod of pods.items) {
+      const podDelete = Promise.promisify(kubernetes.ns(openshiftProject).pods(pod.metadata.name).delete, { context: kubernetes.ns(openshiftProject).pods(pod.metadata.name) })
+      await podDelete()
+      logger.info(`${openshiftProject}: Deleted Pod ${pod.metadata.name}`);
+    }
+
+    const hasZeroPods = () => new Promise(async (resolve, reject) => {
+      const pods = await podsGet()
+      console.log(pods)
+      if (pods.items.length === 0) {
+        logger.info(`${openshiftProject}: All Pods deleted`);
+        resolve()
+      } else {
+        logger.info(`${openshiftProject}: Pods not deleted yet, will try again in 2sec`);
+        reject()
+      }
+    })
+
+    try {
+      await retry(10, hasZeroPods, 2000)
+    } catch (err) {
+      throw new Error(`${openshiftProject}: Pods not deleted`)
+    }
+
+    const projectsDelete = Promise.promisify(openshift.projects(openshiftProject).delete, { context: openshift.projects(openshiftProject) })
+    await projectsDelete()
+    logger.info(`${openshiftProject}: Project deleted`);
+    sendToLagoonLogs('success', projectName, "", "task:remove-openshift:finished",  {},
+      `*[${projectName}]* remove \`${openshiftProject}\``
+    )
+  } catch (err) {
     logger.error(err)
     throw new Error
   }
