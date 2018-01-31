@@ -290,8 +290,7 @@ services :=       api \
 									logs-db \
 									logs-db-ui \
 									logs2logs-db \
-									drush-alias \
-									auto-idler
+									auto-idler \
 									api-db \
 									drush-alias
 
