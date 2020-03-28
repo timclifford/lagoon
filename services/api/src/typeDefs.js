@@ -102,6 +102,11 @@ const typeDefs = gql`
     ZAR
   }
 
+  type Problem {
+    id: Int
+    data: String
+  }
+
   type File {
     id: Int
     filename: String
@@ -521,6 +526,10 @@ const typeDefs = gql`
   }
 
   type Query {
+    """
+    Returns all the problems
+    """
+    getAllProblems: [Problem]
     """
     Returns the current user
     """
