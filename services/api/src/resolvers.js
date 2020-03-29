@@ -6,6 +6,8 @@ const GraphQLJSON = require('graphql-type-json');
 const {
   getProblemsByEnvironmentId,
   getAllProblems,
+  addProblem,
+  deleteProblem,
 } = require('./resources/problem/resolvers');
 
 const {
@@ -228,6 +230,7 @@ const resolvers /* : { [string]: ResolversObj | typeof GraphQLDate } */ = {
     backups: getBackupsByEnvironmentId,
     envVariables: getEnvVarsByEnvironmentId,
     services: getEnvironmentServicesByEnvironmentId,
+    problems: getProblemsByEnvironmentId,
   },
   Deployment: {
     environment: getEnvironmentByDeploymentId,
@@ -283,6 +286,8 @@ const resolvers /* : { [string]: ResolversObj | typeof GraphQLDate } */ = {
     getAllProblems: getAllProblems
   },
   Mutation: {
+    addProblem,
+    deleteProblem,
     addOrUpdateEnvironment,
     updateEnvironment,
     deleteEnvironment,

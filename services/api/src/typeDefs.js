@@ -104,7 +104,30 @@ const typeDefs = gql`
 
   type Problem {
     id: Int
+    environment: Environment
+    severity: String
+    identifier: String
+    service: String
+    source: String
     data: String
+    created: String
+    deleted: String
+  }
+
+  input AddProblemInput {
+    id: Int
+    environment: Int!
+    severity: String
+    identifier: String!
+    service: String
+    source: String!
+    data: String!
+    created: String
+  }
+
+  input DeleteProblemInput {
+    environment: Int!
+    identifier: String!
   }
 
   type File {
@@ -424,6 +447,7 @@ const typeDefs = gql`
     backups(includeDeleted: Boolean): [Backup]
     tasks(id: Int): [Task]
     services: [EnvironmentService]
+    problems: [Problem]
   }
 
   type EnvironmentHitsMonth {
@@ -1242,6 +1266,8 @@ const typeDefs = gql`
     updateDeployment(input: UpdateDeploymentInput): Deployment
     cancelDeployment(input: CancelDeploymentInput!): String
     addBackup(input: AddBackupInput!): Backup
+    addProblem(input: AddProblemInput!): Problem
+    deleteProblem(input: DeleteProblemInput!): String
     deleteBackup(input: DeleteBackupInput!): String
     deleteAllBackups: String
     addRestore(input: AddRestoreInput!): Restore

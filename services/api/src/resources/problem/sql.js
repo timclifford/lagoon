@@ -8,10 +8,39 @@ import type {SqlObj} from '../';
 
 */
 
+const standardEnvironmentReturn = {id: 'id',
+environment: 'environment',
+severity: 'severity',
+identifier: 'identifier',
+service: 'lagoon_service',
+source: 'source',
+data: 'data',
+created: 'created',
+deleted: 'deleted'
+};
+
 const Sql /* : SqlObj */ = {
   selectAllProblems: () =>
     knex('environment_problem')
-    .select({id: 'id', data: 'data'}).toString()
+    .select(standardEnvironmentReturn).toString(),
+  selectProblemByDatabaseId: (id) =>
+    knex('environment_problem').where('id', id).toString(),
+  selectProblemsByEnvironmentId: (environmentId) =>
+    knex('environment_problem').select(standardEnvironmentReturn)
+    .where('environment', environmentId)
+    .where('deleted', '=', '0000-00-00 00:00:00')
+    .toString(),
+  insertProblem: ({id, environment, severity, identifier, lagoon_service, source, data, created}) =>
+    knex('environment_problem').insert({id, environment, severity, identifier, lagoon_service, source, data, created}).toString(),
+  deleteProblem: (environment, identifier) =>
+    knex('environment_problem')
+      .where({
+        environment: environment,
+        identifier: identifier
+      })
+      .where('deleted', '=', '0000-00-00 00:00:00')
+      .update({ deleted: knex.fn.now() })
+      .toString(),
 };
 
 module.exports = Sql;
