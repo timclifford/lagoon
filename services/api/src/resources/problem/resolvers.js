@@ -58,7 +58,7 @@ const addProblem = async (
   root,
   {
     input: {
-      id, environment: environmentId, identifier, service, source, data, created,
+      id, severity, environment: environmentId, identifier, service, source, data, created,
     },
   },
   { sqlClient, hasPermission },
@@ -74,6 +74,7 @@ const addProblem = async (
     sqlClient,
     Sql.insertProblem({
       id,
+      severity,
       lagoon_service: service,
       identifier,
       environment: environmentId,

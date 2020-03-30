@@ -102,10 +102,18 @@ const typeDefs = gql`
     ZAR
   }
 
+  enum ProblemStatus {
+    NOT_CRITICAL
+    LESS_CRITICAL
+    MODERATELY_CRITICAL
+    CRITICAL
+    HIGHLY_CRITICAL
+  }
+
   type Problem {
     id: Int
     environment: Environment
-    severity: String
+    severity: ProblemStatus
     identifier: String
     service: String
     source: String
@@ -117,7 +125,7 @@ const typeDefs = gql`
   input AddProblemInput {
     id: Int
     environment: Int!
-    severity: String
+    severity: ProblemStatus
     identifier: String!
     service: String
     source: String!
