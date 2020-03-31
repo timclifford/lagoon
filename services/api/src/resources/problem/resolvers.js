@@ -13,12 +13,6 @@ import type {ResolversObj} from '../';
 
 */
 
-const getAllProblems = async (parent, args, { sqlClient, hasPermission },) => {
-  //Let's try grab all the problems using sql ...
-  return await query(sqlClient, Sql.selectAllProblems());
-}
-
-
 const getProblemsByEnvironmentId = async (
   {id: environmentId},
   {},
@@ -94,7 +88,6 @@ const deleteProblem = async (
 
 const Resolvers /* : ResolversObj */ = {
   getProblemsByEnvironmentId,
-  getAllProblems,
   addProblem,
   deleteProblem,
 };

@@ -5,7 +5,6 @@ const GraphQLJSON = require('graphql-type-json');
 
 const {
   getProblemsByEnvironmentId,
-  getAllProblems,
   addProblem,
   deleteProblem,
 } = require('./resources/problem/resolvers');
@@ -287,7 +286,6 @@ const resolvers /* : { [string]: ResolversObj | typeof GraphQLDate } */ = {
     billingGroupCost: getBillingGroupCost,
     allBillingGroupsCost: getAllBillingGroupsCost,
     allBillingModifiers: getBillingModifiers,
-    getAllProblems: getAllProblems
   },
   Mutation: {
     addProblem,

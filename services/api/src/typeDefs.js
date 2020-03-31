@@ -563,10 +563,6 @@ const typeDefs = gql`
 
   type Query {
     """
-    Returns all the problems
-    """
-    getAllProblems: [Problem]
-    """
     Returns the current user
     """
     me: User
