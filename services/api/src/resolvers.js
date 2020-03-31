@@ -11,6 +11,10 @@ const {
 } = require('./resources/problem/resolvers');
 
 const {
+  SeverityScoreType
+} = require('./resources/problem/types')
+
+const {
   getDeploymentsByEnvironmentId,
   getDeploymentByRemoteId,
   addDeployment,
@@ -384,6 +388,7 @@ const resolvers /* : { [string]: ResolversObj | typeof GraphQLDate } */ = {
   },
   Date: GraphQLDate,
   JSON: GraphQLJSON,
+  SeverityScore: SeverityScoreType,
 };
 
 module.exports = resolvers;

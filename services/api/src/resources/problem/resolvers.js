@@ -13,21 +13,6 @@ import type {ResolversObj} from '../';
 
 */
 
-/* //current Table structure - this will change as deving
-CREATE TABLE IF NOT EXISTS environment_problem (
-  id                       int NOT NULL auto_increment PRIMARY KEY,
-  environment              int REFERENCES environment (id),
-  severity                 varchar(300) DEFAULT '',
-  identifier               varchar(300) DEFAULT '',
-  lagoon_service           varchar(300) DEFAULT '',
-  source                   varchar(300) DEFAULT '',
-  data                     JSON,
-  created                  timestamp,
-  deleted                  timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  UNIQUE(environment, identifier, deleted)
-);
-*/
-
 const getAllProblems = async (parent, args, { sqlClient, hasPermission },) => {
   //Let's try grab all the problems using sql ...
   return await query(sqlClient, Sql.selectAllProblems());
@@ -40,9 +25,11 @@ const getProblemsByEnvironmentId = async (
   { sqlClient, hasPermission },
 ) => {
   const environment = await environmentHelpers(sqlClient).getEnvironmentById(environmentId);
+
   await hasPermission('problem', 'view', {
     project: environment.project,
   });
+
   const rows = await query(
     sqlClient,
     Sql.selectProblemsByEnvironmentId(environmentId),
@@ -56,7 +43,7 @@ const addProblem = async (
   root,
   {
     input: {
-      id, severity, environment: environmentId, identifier, service, source, data, created,
+      id, severity, environment: environmentId, identifier, service, source, data, created, severityScore
     },
   },
   { sqlClient, hasPermission },
@@ -73,6 +60,7 @@ const addProblem = async (
     Sql.insertProblem({
       id,
       severity,
+      severity_score: severityScore,
       lagoon_service: service,
       identifier,
       environment: environmentId,
@@ -81,10 +69,9 @@ const addProblem = async (
       created,
     }),
   );
-  const rows = await query(sqlClient, Sql.selectProblemByDatabaseId(insertId));
-  const problem = R.prop(0, rows);
 
-  return problem;
+  const rows = await query(sqlClient, Sql.selectProblemByDatabaseId(insertId));
+  return R.prop(0, rows);
 };
 
 const deleteProblem = async (

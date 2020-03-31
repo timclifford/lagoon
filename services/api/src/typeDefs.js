@@ -110,10 +110,13 @@ const typeDefs = gql`
     CRITICAL
   }
 
+  scalar SeverityScore
+
   type Problem {
     id: Int
     environment: Environment
     severity: ProblemSeverityRating
+    severityScore: SeverityScore
     identifier: String
     service: String
     source: String
@@ -126,6 +129,7 @@ const typeDefs = gql`
     id: Int
     environment: Int!
     severity: ProblemSeverityRating
+    severityScore: SeverityScore
     identifier: String!
     service: String
     source: String!

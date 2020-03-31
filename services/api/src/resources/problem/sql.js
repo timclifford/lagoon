@@ -11,6 +11,7 @@ import type {SqlObj} from '../';
 const standardEnvironmentReturn = {id: 'id',
 environment: 'environment',
 severity: 'severity',
+severityScore: 'severity_score',
 identifier: 'identifier',
 service: 'lagoon_service',
 source: 'source',
@@ -30,8 +31,8 @@ const Sql /* : SqlObj */ = {
     .where('environment', environmentId)
     .where('deleted', '=', '0000-00-00 00:00:00')
     .toString(),
-  insertProblem: ({id, environment, severity, identifier, lagoon_service, source, data, created}) =>
-    knex('environment_problem').insert({id, environment, severity, identifier, lagoon_service, source, data, created}).toString(),
+  insertProblem: ({id, environment, severity, severity_score, identifier, lagoon_service, source, data, created}) =>
+    knex('environment_problem').insert({id, environment, severity, severity_score, identifier, lagoon_service, source, data, created}).toString(),
   deleteProblem: (environment, identifier) =>
     knex('environment_problem')
       .where({

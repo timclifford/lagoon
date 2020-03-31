@@ -207,6 +207,7 @@ CREATE TABLE IF NOT EXISTS environment_problem (
   id                       int NOT NULL auto_increment PRIMARY KEY,
   environment              int REFERENCES environment (id),
   severity                 varchar(300) DEFAULT '',
+  severity_score           DECIMAL(1,1) DEFAULT 0.0,
   identifier               varchar(300) NOT NULL,
   lagoon_service           varchar(300) DEFAULT '',
   source                   varchar(300) DEFAULT '',
