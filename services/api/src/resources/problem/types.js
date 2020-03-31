@@ -4,7 +4,7 @@ import {Kind} from 'graphql/language';
 
 const SeverityScoreType = new GraphQLScalarType({
   name: 'SeverityScore',
-  description: 'Description of my custom scalar type',
+  description: 'Severity score is a numeric measure (0-1) of a problems severity',
   serialize: parseFloat,
   parseValue: parseFloat,
   parseLiteral(ast) {
