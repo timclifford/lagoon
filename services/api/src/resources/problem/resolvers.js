@@ -14,7 +14,7 @@ import type {ResolversObj} from '../';
 */
 
 const getProblemsByEnvironmentId = async (
-  {id: environmentId},
+  { id: environmentId },
   {},
   { sqlClient, hasPermission },
 ) => {
@@ -43,6 +43,7 @@ const addProblem = async (
   { sqlClient, hasPermission },
 ) => {
   const environment = await environmentHelpers(sqlClient).getEnvironmentById(environmentId);
+
   await hasPermission('problem', 'add', {
     project: environment.project,
   });
@@ -77,12 +78,15 @@ const deleteProblem = async (
     }
   },
   { sqlClient, hasPermission },
-  ) => {
+) => {
   const environment = await environmentHelpers(sqlClient).getEnvironmentById(environmentId);
+
   await hasPermission('problem', 'delete', {
     project: environment.project,
   });
+
   await query(sqlClient, Sql.deleteProblem(environmentId, identifier));
+
   return 'success';
 }
 
