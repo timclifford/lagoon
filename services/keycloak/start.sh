@@ -1297,7 +1297,7 @@ EOF
   "decisionStrategy": "UNANIMOUS",
   "resources": ["problem"],
   "scopes": ["delete"],
-  "policies": ["Users role for project is Maintainer","User has access to project"]
+  "policies": ["Users role for project is Developer","User has access to project"]
 }
 EOF
 

@@ -40,11 +40,9 @@ const getProblemsByEnvironmentId = async (
   { sqlClient, hasPermission },
 ) => {
   const environment = await environmentHelpers(sqlClient).getEnvironmentById(environmentId);
-  //TODO: permissions setup
-  // await hasPermission('problem', 'view', {
-  //   project: environment.project,
-  // });
-
+  await hasPermission('problem', 'view', {
+    project: environment.project,
+  });
   const rows = await query(
     sqlClient,
     Sql.selectProblemsByEnvironmentId(environmentId),
@@ -100,10 +98,9 @@ const deleteProblem = async (
   { sqlClient, hasPermission },
   ) => {
   const environment = await environmentHelpers(sqlClient).getEnvironmentById(environmentId);
-  //TODO: permissions setup
-  // await hasPermission('problem', 'add', {
-  //   project: environment.project,
-  // });
+  await hasPermission('problem', 'delete', {
+    project: environment.project,
+  });
   await query(sqlClient, Sql.deleteProblem(environmentId, identifier));
   return 'success';
 }
