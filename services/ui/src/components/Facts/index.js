@@ -3,9 +3,8 @@ import { bp, color, fontSize } from 'lib/variables';
 import useSortableData from '../../lib/withSortedItems';
 
 const Facts = ({ facts }) => {
-    const { sortedItems, requestSort, getClassNamesFor } = useSortableData(facts);
+    const { sortedItems, getClassNamesFor, requestSort } = useSortableData(facts, {key: 'name', direction: 'ascending'});
 
-    const [currentItems, setCurrentItems] = useState(sortedItems);
     const [factTerm, setFactTerm] = useState('');
     const [hasFilter, setHasFilter] = React.useState(false);
 
@@ -13,45 +12,31 @@ const Facts = ({ facts }) => {
         setHasFilter(false);
 
         if (event.target.value !== null || event.target.value !== '') {
-            setCurrentItems(sortedItems);
             setHasFilter(true);
         }
         setFactTerm(event.target.value);
     };
 
     const handleSort = (key) => {
-        if (hasFilter) {
-            const results = filterResults();
-            setCurrentItems(results);
-        }
-        else {
-            setCurrentItems(sortedItems);
-        }
-
         return requestSort(key);
     };
 
-    const filterResults = () => {
+    const filterResults = (item) => {
         const lowercasedFilter = factTerm.toLowerCase();
 
-        return sortedItems.filter(item => {
-            if (factTerm == null || factTerm === '') {
-                setHasFilter(false);
-                return Facts;
-            }
+        if (factTerm == null || factTerm === '') {
+            return facts;
+        }
 
-            return Object.keys(item).some(key => {
-                if (item[key] !== null) {
-                    return item[key].toString().toLowerCase().includes(lowercasedFilter);
-                }
-            });
+        return Object.keys(item).some(key => {
+            if (item[key] !== null) {
+                return item[key].toString().toLowerCase().includes(lowercasedFilter);
+            }
         });
     };
 
-    useEffect(() => {
-        const results = filterResults();
-        setCurrentItems(results);
-    }, [factTerm]);
+    console.log(sortedItems);
+
 
     return (
         <div className="facts">
@@ -78,8 +63,8 @@ const Facts = ({ facts }) => {
                 </button>
             </div>
             <div className="data-table">
-                {!currentItems.length && <div className="data-none">No Facts</div>}
-                {currentItems.map((fact) => {
+                {!sortedItems.filter(fact => filterResults(fact)).length && <div className="data-none">No Facts</div>}
+                {sortedItems.filter(fact => filterResults(fact)).map((fact) => {
                     return (
                         <div className="data-row row-heading" key={fact.id}>
                           <div>{fact.name}</div>

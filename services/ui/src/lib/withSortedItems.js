@@ -1,34 +1,27 @@
-import React, {useState} from "react";
+import React, {useState, useMemo} from "react";
 import hash from 'object-hash';
 
-const useSortableData = (initialItems) => {
-    const initialConfig = {key: 'name', direction: 'ascending'};
+const useSortableData = (initialItems, initialConfig) => {
     const [sortConfig, setSortConfig] = React.useState(initialConfig);
     const [currentItems, setCurrentItems] = useState(initialItems);
 
     const getClassNamesFor = (name) => {
-        if (!sortConfig) {
-            return;
-        }
-
+        if (!sortConfig) return;
         return sortConfig.key === name ? sortConfig.direction : undefined;
     };
 
-    const sortedItems = React.useMemo(() => {
+    const sortedItems = useMemo(() => {
+        if (!currentItems) return;
+
         let sortableItems = [...currentItems];
 
         if (sortConfig !== null) {
             sortableItems.sort((a, b) => {
-                let aParsed = (a[sortConfig.key] ? a[sortConfig.key].toString().toLowerCase().trim() : null);
-                let bParsed = (b[sortConfig.key] ? b[sortConfig.key].toString().toLowerCase().trim() : null);
+                let aParsed = a[sortConfig.key].toString().toLowerCase().trim();
+                let bParsed = b[sortConfig.key].toString().toLowerCase().trim();
 
-                if (aParsed < bParsed) {
-                    return sortConfig.direction === 'ascending' ? -1 : 1;
-                }
-                if (aParsed > bParsed) {
-                    return sortConfig.direction === 'ascending' ? 1 : -1;
-                }
-
+                if (aParsed < bParsed) return sortConfig.direction === 'ascending' ? -1 : 1;
+                if (aParsed > bParsed) return sortConfig.direction === 'ascending' ? 1 : -1;
                 return 0;
             });
         }
@@ -47,13 +40,13 @@ const useSortableData = (initialItems) => {
             direction = 'descending';
         }
 
-       setCurrentItems(sortedItems);
-       setSortConfig({ key, direction });
+        setCurrentItems(sortedItems);
+        setSortConfig({ key, direction });
 
-       return { sortedItems: currentItems };
+        return { sortedItems: currentItems };
     };
 
-    return { sortedItems: currentItems, getClassNamesFor, requestSort };
+    return { sortedItems: currentItems, currentSortConfig: sortConfig, getClassNamesFor, requestSort };
 };
 
 export default useSortableData;
