@@ -103,23 +103,12 @@ app
     );
 
     server.get(
-      '/problems/project',
+      '/projects/:projectSlug/:environmentSlug/problems/:problemSlug',
       (req, res) => {
-          app.render(req, res, '/problems-dashboard-by-project');
-      }
-    );
-
-    server.get(
-      '/problems',
-      (req, res) => {
-          app.render(req, res, '/problems-dashboard-by-project-hex');
-      }
-    );
-
-    server.get(
-      '/problems/identifier',
-      (req, res) => {
-          app.render(req, res, '/problems-dashboard');
+          app.render(req, res, '/problem', {
+              openshiftProjectName: req.params.environmentSlug,
+              identifier: req.params.problemSlug
+          });
       }
     );
 
@@ -129,7 +118,28 @@ app
           app.render(req, res, '/facts', {
               openshiftProjectName: req.params.environmentSlug
           });
-        }
+      }
+    );
+
+    server.get(
+      '/problems',
+       (req, res) => {
+         app.render(req, res, '/problems-dashboard-by-project-hex');
+       }
+    );
+
+    server.get(
+      '/problems/project',
+      (req, res) => {
+          app.render(req, res, '/problems-dashboard-by-project');
+      }
+    );
+
+    server.get(
+      '/problems/identifier',
+      (req, res) => {
+          app.render(req, res, '/problems-dashboard');
+      }
     );
 
 

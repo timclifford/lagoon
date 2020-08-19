@@ -129,4 +129,11 @@ export const Sql = {
         .where({
           id: id,
         }).delete().toString(),
+  selectPermsForProblem: (id: number) =>
+      knex('environment_problem')
+        .select({ pid: 'project.id' })
+        .join('environment', 'environment_problem.environment', '=', 'environment.id')
+        .join('project', 'environment.project', '=', 'project.id')
+        .where('environment_problem.id', id)
+        .toString(),
 };

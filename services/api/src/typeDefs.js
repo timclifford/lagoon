@@ -573,6 +573,7 @@ const typeDefs = gql`
     backups(includeDeleted: Boolean): [Backup]
     tasks(id: Int): [Task]
     services: [EnvironmentService]
+    problem(identifier: String): Problem
     problems(severity: [ProblemSeverityRating], source: [String]): [Problem]
     facts: [Fact]
   }
@@ -753,6 +754,10 @@ const typeDefs = gql`
     """
     allProblems(source: [String], project: Int, environment: Int, envType: [EnvType], identifier: String, severity: [ProblemSeverityRating]): [Problem]
     problemSources: [String]
+    """
+    Return problem by ID
+    """
+    problemById(id: Int!): Problem
     """
     Returns all Groups matching given filter (all if no filter defined)
     """

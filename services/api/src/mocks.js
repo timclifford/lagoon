@@ -475,7 +475,7 @@ mocks.Query = () => ({
   userCanSshToEnvironment: () => mocks.Environment(),
   deploymentByRemoteId: () => mocks.Deployment(),
   taskByRemoteId: () => mocks.Task(),
-  allProjects: () => new MockList(600),
+  allProjects: () => new MockList(100),
   allOpenshifts: () => new MockList(9),
   allProblems: () => new MockList(5),
   allEnvironments: (parent, args = {}, context, info) => {

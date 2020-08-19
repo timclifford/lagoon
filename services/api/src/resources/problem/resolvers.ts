@@ -1,5 +1,5 @@
 import * as R from 'ramda';
-import { query, prepare } from '../../util/db';
+import { query, prepare, knex } from '../../util/db';
 import { Sql } from './sql';
 import { Helpers as problemHelpers } from './helpers';
 import { Helpers as environmentHelpers } from '../environment/helpers';
@@ -42,6 +42,79 @@ export const getAllProblems: ResolverFn = async (
       const sorted = R.sort(R.descend(R.prop('severity')), completed);
       return sorted.map((row: any) => ({ ...(row as Object) }));
   });
+};
+
+export const getProblemById: ResolverFn = async (
+  root,
+  { id },
+  {
+    sqlClient,
+    hasPermission,
+  }
+) => {
+
+  const prepQuery = prepare(
+    sqlClient,
+`SELECT
+       problem.*
+      FROM environment_problem problem
+      JOIN environment e on problem.environment = e.id
+      JOIN project p ON e.project = p.id
+      WHERE problem.id = :id
+      LIMIT 1
+    `,
+  );
+
+  const rows = await query(sqlClient, prepQuery({ id }));
+  const problem = rows[0];
+
+  if (!problem) {
+    return null;
+  }
+
+  const rowsPerms = await query(sqlClient, Sql.selectPermsForProblem(problem.id));
+  await hasPermission('problem', 'view', {
+    project: R.path(['0', 'pid'], rowsPerms),
+  });
+
+
+  return problem;
+};
+
+export const getProblemByIdentifier: ResolverFn = async (
+  root,
+  { identifier },
+  {
+    sqlClient,
+    hasPermission,
+  }
+) => {
+
+  const prepQuery = prepare(
+    sqlClient,
+`SELECT
+       problem.*
+      FROM environment_problem problem
+      JOIN environment e on problem.environment = e.id
+      JOIN project p ON e.project = p.id
+      WHERE problem.identifier = :identifier
+      LIMIT 1
+    `,
+  );
+
+  const rows = await query(sqlClient, prepQuery({ identifier }));
+  const problem = rows[0];
+
+  if (!problem) {
+    return null;
+  }
+
+  const rowsPerms = await query(sqlClient, Sql.selectPermsForProblem(problem.id));
+  await hasPermission('problem', 'view', {
+    project: R.path(['0', 'pid'], rowsPerms),
+  });
+
+  return problem;
 };
 
 export const getSeverityOptions = async (
