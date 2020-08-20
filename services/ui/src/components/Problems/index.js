@@ -91,7 +91,6 @@ const Problems = ({ problems }) => {
         <div className="problems-container">
             {!sortedItems.filter(item => filterResults(item)) && <div className="data-none">No Problems</div>}
             {sortedItems.filter(item => filterResults(item)).map((problem) => {
-                console.log(problem);
                 return <Problem key={`${problem.identifier}-${problem.id}`} problem={problem}/>
             })}
         </div>

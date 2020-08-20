@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useState } from 'react';
 import * as R from 'ramda';
 import Head from 'next/head';
 import {useQuery} from "@apollo/react-hooks";
@@ -22,7 +22,7 @@ const ProblemsDashboardProductHexPage = () => {
   const { data: severities, loading: severityLoading } = useQuery(getSeverityEnumQuery);
   const { data: sources, loading: sourceLoading } = useQuery(getSourceOptions);
 
-  const { data: projectsProblems, loading: projectsProblemsLoading} =
+  const { data: projectsProblems, loading: projectsProblemsLoading } =
       useQuery(AllProjectsProblemsQuery, {
         variables: {
           severity: severity,

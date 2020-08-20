@@ -1,9 +1,9 @@
-import React, {useState, Fragment, useEffect, useRef} from "react";
-import { HexGrid, Layout, Hexagon, Text, GridGenerator, HexUtils } from 'react-hexgrid';
+import React, { useState, useEffect } from "react";
+import { HexGrid, Layout, Hexagon, Text, GridGenerator } from 'react-hexgrid';
 import * as R from 'ramda';
-import ProblemsByProject from "components/ProblemsByProject";
-import {LoadingPageNoHeader} from 'pages/_loading';
-import {ErrorNoHeader} from 'pages/_error';
+import ProblemsByProject from 'components/ProblemsByProject';
+import { LoadingPageNoHeader } from 'pages/_loading';
+import { ErrorNoHeader } from 'pages/_error';
 import { bp } from 'lib/variables';
 import './styling.css';
 

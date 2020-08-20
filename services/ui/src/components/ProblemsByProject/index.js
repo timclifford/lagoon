@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { bp, color, fontSize } from 'lib/variables';
 import useSortableData from './sortedItems';
-import Accordion from 'components/Accordion';
+import Problem from 'components/Problem';
 
-const ProblemsByProject = ({ problems }) => {
+const ProblemsByProject = ({ problems, minified }) => {
     const { sortedItems, getClassNamesFor, requestSort } = useSortableData(problems, {key: 'id', direction: 'ascending'});
 
     const [problemTerm, setProblemTerm] = useState('');
@@ -75,46 +75,9 @@ const ProblemsByProject = ({ problems }) => {
         </div>
         <div className="data-table">
           {!sortedItems.filter(problem => filterResults(problem)).length && <div className="data-none">No Problems</div>}
-          {sortedItems.filter(problem => filterResults(problem)).map((problem) => {
-
-            const {identifier, source, severity, associatedPackage, data } = problem;
-            const columns = {identifier, source, severity, associatedPackage};
-            const parsedData = JSON.parse(data);
-
-            return (
-              <Accordion
-                key={identifier}
-                columns={columns}
-                defaultValue={false}
-                className="data-row row-heading"
-              >
-                <div className="expanded-wrapper">
-                  <div className="fieldWrapper">
-                    <label>Problem Description</label>
-                    {problem && <div className="description">
-                      {(problem.description).length > 250 ? problem.description.substring(0, 247)+'...' : problem.description}
-                    </div>}
-                  </div>
-                  <div className="fieldWrapper">
-                    <label>Package</label>
-                    {problem && <div className="package">{problem.associatedPackage}</div>}
-                  </div>
-                  <div className="fieldWrapper">
-                    <label>Associated link (CVE description etc.)</label>
-                    {problem && <div className="links"><a href={problem.links} target="_blank">{problem.links}</a></div>}
-                  </div>
-                  {problem && (<div className="fieldWrapper">
-                    <label>Data:</label>
-                    <div className="data-wrapper">
-                      {parsedData && <div className="data">{Object.keys(parsedData).map((key) => {
-                          return <div className="data-item"><span className="key">{key}: </span><span className="value">{`${parsedData[key]}`}</span></div>
-                    })}</div>}
-                  </div>
-                  </div>)}
-                </div>
-              </Accordion>
-            );
-          })}
+          {sortedItems.filter(problem => filterResults(problem)).map((problem) => (
+            <Problem key={`${problem.identifier}-${problem.id}`} problem={problem} />
+          ))}
         </div>
         <style jsx>{`
           .header {
@@ -184,34 +147,6 @@ const ProblemsByProject = ({ problems }) => {
 
             &.descending:after {
               content: ' \\25BC';
-            }
-          }
-
-          .expanded-wrapper {
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
-            width: 100%;
-            padding: 20px;
-            background: ${color.lightestGrey};
-
-            .fieldWrapper {
-              padding-bottom: 1em;
-              display: flex;
-              flex-direction: column;
-              width: 100%;
-            }
-
-            .left-content,
-            .right-content {
-              display: flex;
-              flex-direction: column;
-              flex-basis: 100%;
-              flex: 1;
-            }
-
-            .problems-link {
-              color: #2bc0d8;
             }
           }
 

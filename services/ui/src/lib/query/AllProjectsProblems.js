@@ -6,9 +6,14 @@ export default gql`
     projectsProblems: allProjects {
       id
       name
+      openshiftProjectName
       environments(type: $envType) {
         id
         name
+        openshiftProjectName
+        project {
+            name
+        }
         problems(severity: $severity, source: $source) {
           ...problemFields
         }
